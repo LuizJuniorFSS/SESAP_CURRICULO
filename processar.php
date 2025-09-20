@@ -1,0 +1,217 @@
+<?php
+require_once 'config.php';
+require_once 'email.php';
+
+// Iniciar sessão para mensagens
+session_start();
+
+// Verificar se o formulário foi enviado via POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: index.html');
+    exit;
+}
+
+// Função para sanitizar dados de entrada
+function sanitizeInput($data) {
+    return htmlspecialchars(strip_tags(trim($data)));
+}
+
+// Função para validar email
+function validateEmail($email) {
+    return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+}
+
+// Função para validar telefone brasileiro
+function validatePhone($phone) {
+    $phone = preg_replace('/[^0-9]/', '', $phone);
+    return preg_match('/^\d{10,11}$/', $phone);
+}
+
+// Array para armazenar erros
+$errors = [];
+$data = [];
+
+// Validar campos obrigatórios
+$requiredFields = ['nome', 'email', 'telefone', 'cargo_desejado', 'escolaridade'];
+
+foreach ($requiredFields as $field) {
+    if (empty($_POST[$field])) {
+        $errors[] = "O campo {$field} é obrigatório.";
+    } else {
+        $data[$field] = sanitizeInput($_POST[$field]);
+    }
+}
+
+// Validações específicas
+if (!empty($data['nome']) && strlen($data['nome']) < 2) {
+    $errors[] = "Nome deve ter pelo menos 2 caracteres.";
+}
+
+if (!empty($data['email']) && !validateEmail($data['email'])) {
+    $errors[] = "E-mail inválido.";
+}
+
+if (!empty($data['telefone']) && !validatePhone($data['telefone'])) {
+    $errors[] = "Telefone inválido.";
+}
+
+if (!empty($data['cargo_desejado']) && strlen($data['cargo_desejado']) < 2) {
+    $errors[] = "Cargo desejado deve ter pelo menos 2 caracteres.";
+}
+
+// Validar escolaridade
+$escolaridadeValida = [
+    'Ensino Fundamental Incompleto',
+    'Ensino Fundamental Completo',
+    'Ensino Médio Incompleto',
+    'Ensino Médio Completo',
+    'Ensino Superior Incompleto',
+    'Ensino Superior Completo',
+    'Pós-graduação',
+    'Mestrado',
+    'Doutorado'
+];
+
+if (!empty($data['escolaridade']) && !in_array($data['escolaridade'], $escolaridadeValida)) {
+    $errors[] = "Escolaridade inválida.";
+}
+
+// Campo observações (opcional)
+$data['observacoes'] = isset($_POST['observacoes']) ? sanitizeInput($_POST['observacoes']) : '';
+
+// Validar arquivo
+if (!isset($_FILES['arquivo']) || $_FILES['arquivo']['error'] !== UPLOAD_ERR_OK) {
+    $errors[] = "Erro no upload do arquivo.";
+} else {
+    $arquivo = $_FILES['arquivo'];
+    
+    // Verificar tamanho do arquivo (1MB máximo)
+    if ($arquivo['size'] > MAX_FILE_SIZE) {
+        $errors[] = "Arquivo muito grande. Tamanho máximo: 1MB.";
+    }
+    
+    // Verificar extensão do arquivo
+    $extensao = strtolower(pathinfo($arquivo['name'], PATHINFO_EXTENSION));
+    if (!in_array($extensao, ALLOWED_EXTENSIONS)) {
+        $errors[] = "Formato de arquivo não permitido. Use .doc, .docx ou .pdf.";
+    }
+    
+    // Verificar tipo MIME
+    $allowedMimes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
+    
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mimeType = finfo_file($finfo, $arquivo['tmp_name']);
+    finfo_close($finfo);
+    
+    if (!in_array($mimeType, $allowedMimes)) {
+        $errors[] = "Tipo de arquivo não permitido.";
+    }
+}
+
+// Se houver erros, redirecionar de volta com mensagens
+if (!empty($errors)) {
+    $_SESSION['errors'] = $errors;
+    $_SESSION['form_data'] = $_POST;
+    header('Location: index.html?error=1');
+    exit;
+}
+
+// Processar upload do arquivo
+$uploadDir = UPLOAD_DIR;
+if (!is_dir($uploadDir)) {
+    mkdir($uploadDir, 0755, true);
+}
+
+// Função para limpar nome do arquivo
+function limparNomeArquivo($nome) {
+    // Remover acentos e caracteres especiais
+    $nome = iconv('UTF-8', 'ASCII//TRANSLIT', $nome);
+    // Remover caracteres não alfanuméricos exceto espaços
+    $nome = preg_replace('/[^a-zA-Z0-9\s]/', '', $nome);
+    // Substituir espaços por underscores
+    $nome = str_replace(' ', '_', $nome);
+    // Remover múltiplos underscores consecutivos
+    $nome = preg_replace('/_+/', '_', $nome);
+    // Remover underscores do início e fim
+    $nome = trim($nome, '_');
+    return $nome;
+}
+
+// Gerar nome do arquivo com o nome da pessoa
+$nomeCompleto = limparNomeArquivo($data['nome']);
+$nomeArquivo = 'Curriculo_' . $nomeCompleto . '.' . $extensao;
+
+// Verificar se já existe um arquivo com esse nome e adicionar número se necessário
+$contador = 1;
+$nomeArquivoOriginal = $nomeArquivo;
+while (file_exists($uploadDir . $nomeArquivo)) {
+    $nomeArquivo = 'Curriculo_' . $nomeCompleto . '_' . $contador . '.' . $extensao;
+    $contador++;
+}
+
+$caminhoArquivo = $uploadDir . $nomeArquivo;
+
+if (!move_uploaded_file($arquivo['tmp_name'], $caminhoArquivo)) {
+    $_SESSION['errors'] = ['Erro ao salvar o arquivo.'];
+    header('Location: index.html?error=1');
+    exit;
+}
+
+// Salvar no banco de dados
+try {
+    $pdo = getConnection();
+    
+    $sql = "INSERT INTO curriculos (nome, email, telefone, cargo_desejado, escolaridade, observacoes, arquivo_nome, arquivo_caminho, ip_envio) 
+            VALUES (:nome, :email, :telefone, :cargo_desejado, :escolaridade, :observacoes, :arquivo_nome, :arquivo_caminho, :ip_envio)";
+    
+    $stmt = $pdo->prepare($sql);
+    
+    $params = [
+        ':nome' => $data['nome'],
+        ':email' => $data['email'],
+        ':telefone' => $data['telefone'],
+        ':cargo_desejado' => $data['cargo_desejado'],
+        ':escolaridade' => $data['escolaridade'],
+        ':observacoes' => $data['observacoes'],
+        ':arquivo_nome' => $arquivo['name'],
+        ':arquivo_caminho' => $caminhoArquivo,
+        ':ip_envio' => getUserIP()
+    ];
+    
+    $stmt->execute($params);
+    $curriculoId = $pdo->lastInsertId();
+    
+    // Enviar email para a empresa
+    $emailEnviado = enviarEmail($data, $caminhoArquivo, $arquivo['name']);
+    
+    // Preparar dados para a página de sucesso
+    $_SESSION['curriculo_id'] = $curriculoId;
+    $_SESSION['success'] = 'Currículo cadastrado com sucesso!';
+    $_SESSION['dados_candidato'] = $data;
+    $_SESSION['user_email_temp'] = $data['email']; // Email para acesso posterior
+    
+    // Salvar IP na sessão para exibir na página de sucesso
+    $_SESSION['ip_envio'] = getUserIP();
+    
+    // Redirecionar para página de sucesso
+    header('Location: sucesso.php');
+    exit;
+    
+} catch (PDOException $e) {
+    // Log do erro (em produção, usar um sistema de log apropriado)
+    error_log('Erro no banco de dados: ' . $e->getMessage());
+    
+    // Remover arquivo se houve erro no banco
+    if (file_exists($caminhoArquivo)) {
+        unlink($caminhoArquivo);
+    }
+    
+    $_SESSION['errors'] = ['Erro interno do servidor. Tente novamente mais tarde.'];
+    header('Location: index.html?error=1');
+    exit;
+}
+?>
