@@ -292,7 +292,7 @@ if (!$curriculo) {
             <div class="user-info">
                 <p><strong>Bem-vindo(a), <?= htmlspecialchars($curriculo['nome']) ?>!</strong></p>
                 <p><?= htmlspecialchars($curriculo['email']) ?></p>
-                <a href="user_logout.php" class="logout-btn">🚪 Sair</a>
+                <a href="user_logout.php" class="logout-btn" style="margin-top: 10px; display: inline-block;">🚪 Sair</a>
             </div>
         </div>
         
@@ -320,36 +320,13 @@ if (!$curriculo) {
                     <div class="info-label">Telefone:</div>
                     <div class="info-value"><?= htmlspecialchars($curriculo['telefone']) ?></div>
                 </div>
-                <div class="info-item">
-                    <div class="info-label">Data de Nascimento:</div>
-                    <div class="info-value"><?= date('d/m/Y', strtotime($curriculo['data_nascimento'])) ?></div>
-                </div>
             </div>
             
-            <div class="info-card">
-                <h3>📍 Endereço</h3>
-                <div class="info-item">
-                    <div class="info-label">Endereço:</div>
-                    <div class="info-value"><?= htmlspecialchars($curriculo['endereco']) ?></div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Cidade:</div>
-                    <div class="info-value"><?= htmlspecialchars($curriculo['cidade']) ?></div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Estado:</div>
-                    <div class="info-value"><?= htmlspecialchars($curriculo['estado']) ?></div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">CEP:</div>
-                    <div class="info-value"><?= htmlspecialchars($curriculo['cep']) ?></div>
-                </div>
-            </div>
         </div>
         
         <?php if (!empty($curriculo['observacoes'])): ?>
         <div class="observacoes-card">
-            <h3>💼 Experiências e Habilidades</h3>
+            <h3>💼 Experiências académicas ou profissionais e Habilidades</h3>
             <div class="observacoes-content"><?= htmlspecialchars($curriculo['observacoes']) ?></div>
         </div>
         <?php endif; ?>

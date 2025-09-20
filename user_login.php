@@ -10,6 +10,11 @@ if (isset($_SESSION['user_authenticated']) && $_SESSION['user_authenticated'] ==
 $error_message = '';
 $success_message = '';
 
+// Verificar se há mensagem de logout
+if (isset($_GET['logout']) && $_GET['logout'] === 'success') {
+    $success_message = 'Logout realizado com sucesso!';
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     
