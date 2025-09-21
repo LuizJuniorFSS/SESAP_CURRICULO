@@ -1,12 +1,16 @@
-http://localhost/sesap_curriculo/public/index.html
+## Links de Acesso ao Sistema
 
-http://localhost/sesap_curriculo/pages/user/user_login.php
+- **VSCODE:** https://code.visualstudio.com/download
+- **XAMPP:** https://sourceforge.net/projects/xampp/files/
 
-http://localhost/sesap_curriculo/pages/admin/login.php
+### URLs do Sistema
+- **Página Inicial:** http://localhost/sesap_curriculo/public/index.html
+- **Área do Usuário:** http://localhost/sesap_curriculo/pages/user/user_login.php
+- **Área Administrativa:** http://localhost/sesap_curriculo/pages/admin/login.php
 
-Administrador:
-   Usuário: SESAP
-   Senha: admin123
+### Credenciais de Administrador
+- **Usuário:** SESAP
+- **Senha:** admin123
 
 # Sistema de Cadastro de Currículos - SESAP
 
