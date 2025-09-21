@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Currículo - SESAP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .admin-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+            z-index: 10;
+            cursor: pointer;
+        }
+        
+        .admin-link:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .admin-link:first-child {
+            right: 20px;
+        }
+
+        .admin-link:nth-child(2) {
+            left: 20px;
+            right: auto;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background-color: #fafafa;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .file-input-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px dashed #bdc3c7;
+            border-radius: 8px;
+            background-color: #fafafa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        input[type="file"]:hover {
+            border-color: #3498db;
+            background-color: #f8f9fa;
+        }
+
+        .file-info {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="/sesap_curriculo/pages/admin/login.php" class="admin-link">🗂️ Painel Admin</a>
+            <a href="/sesap_curriculo/pages/user/user_login.php" class="admin-link">👤 Painel Usuário</a>
+            <h1>SESAP</h1>
+            <p>Sistema de Cadastro de Currículos</p>
+        </div>
+        
+        <div class="form-container">
+            <form id="curriculoForm" action="/sesap_curriculo/pages/processar.php" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="nome">Nome Completo <span class="required">*</span></label>
+                    <input type="text" id="nome" name="nome" required>
+                    <div class="error-message" id="erro-nome"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" required>
+                    <div class="error-message" id="erro-email"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefone">Telefone <span class="required">*</span></label>
+                    <input type="tel" id="telefone" name="telefone" required placeholder="(00) 00000-0000">
+                    <div class="error-message" id="erro-telefone"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cargo">Cargo Desejado <span class="required">*</span></label>
+                    <input type="text" id="cargo" name="cargo_desejado" required placeholder="Ex: Desenvolvedor PHP, Analista de Sistemas...">
+                    <div class="error-message" id="erro-cargo"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="escolaridade">Escolaridade <span class="required">*</span></label>
+                    <select id="escolaridade" name="escolaridade" required>
+                        <option value="">Selecione sua escolaridade</option>
+                        <option value="Ensino Fundamental Incompleto">Ensino Fundamental Incompleto</option>
+                        <option value="Ensino Fundamental Completo">Ensino Fundamental Completo</option>
+                        <option value="Ensino Médio Incompleto">Ensino Médio Incompleto</option>
+                        <option value="Ensino Médio Completo">Ensino Médio Completo</option>
+                        <option value="Ensino Superior Incompleto">Ensino Superior Incompleto</option>
+                        <option value="Ensino Superior Completo">Ensino Superior Completo</option>
+                        <option value="Pós-graduação">Pós-graduação</option>
+                        <option value="Mestrado">Mestrado</option>
+                        <option value="Doutorado">Doutorado</option>
+                    </select>
+                    <div class="error-message" id="erro-escolaridade"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="observacoes">Experiências academicas ou profissionais e habilidades</label>
+                    <textarea id="observacoes" name="observacoes" placeholder="Informações adicionais sobre sua experiência, habilidades ou outros dados relevantes..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="arquivo">Currículo <span class="required">*</span></label>
+                    <input type="file" id="arquivo" name="arquivo" accept=".doc,.docx,.pdf" required>
+                    <div class="file-info">Formatos aceitos: .doc, .docx, .pdf | Tamanho máximo: 1MB</div>
+                    <div class="error-message" id="erro-arquivo"></div>
+                </div>
+
+                <button type="submit" class="submit-btn">Enviar Currículo</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Validação básica do formulário
+        document.getElementById('curriculoForm').addEventListener('submit', function(e) {
+            let isValid = true;
+            
+            // Limpar mensagens de erro anteriores
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+                el.textContent = '';
+            });
+            
+            // Validar nome
+            const nome = document.getElementById('nome').value.trim();
+            if (nome.length < 2) {
+                showError('erro-nome', 'Nome deve ter pelo menos 2 caracteres');
+                isValid = false;
+            }
+            
+            // Validar email
+            const email = document.getElementById('email').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('erro-email', 'E-mail inválido');
+                isValid = false;
+            }
+            
+            // Validar telefone
+            const telefone = document.getElementById('telefone').value.trim();
+            const telefoneRegex = /^\(?\d{2}\)?[\s-]?\d{4,5}[\s-]?\d{4}$/;
+            if (!telefoneRegex.test(telefone)) {
+                showError('erro-telefone', 'Telefone inválido');
+                isValid = false;
+            }
+            
+            // Validar cargo
+            const cargo = document.getElementById('cargo').value.trim();
+            if (cargo.length < 2) {
+                showError('erro-cargo', 'Cargo desejado deve ter pelo menos 2 caracteres');
+                isValid = false;
+            }
+            
+            // Validar escolaridade
+            const escolaridade = document.getElementById('escolaridade').value;
+            if (!escolaridade) {
+                showError('erro-escolaridade', 'Selecione sua escolaridade');
+                isValid = false;
+            }
+            
+            // Validar arquivo
+            const arquivo = document.getElementById('arquivo').files[0];
+            if (!arquivo) {
+                showError('erro-arquivo', 'Selecione um arquivo de currículo');
+                isValid = false;
+            } else {
+                const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                const maxSize = 1048576; // 1MB
+                
+                if (!allowedTypes.includes(arquivo.type)) {
+                    showError('erro-arquivo', 'Formato de arquivo não permitido. Use .doc, .docx ou .pdf');
+                    isValid = false;
+                }
+                
+                if (arquivo.size > maxSize) {
+                    showError('erro-arquivo', 'Arquivo muito grande. Tamanho máximo: 1MB');
+                    isValid = false;
+                }
+            }
+            
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+        
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        // Formatação automática do telefone
+        document.getElementById('telefone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/(\d{2})(\d{4,5})(\d{4})/, '($1) $2-$3');
+                e.target.value = value;
+            }
+        });
+    </script>
+</body>
+</html>

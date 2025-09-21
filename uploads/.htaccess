@@ -1,0 +1,14 @@
+# Proteger arquivos na pasta uploads
+# Negar acesso direto a TODOS os arquivos
+Order Deny,Allow
+Deny from all
+
+# Bloquear execução de scripts
+Options -ExecCGI
+AddHandler cgi-script .php .pl .py .jsp .asp .sh .cgi
+
+# Desabilitar listagem de diretório
+Options -Indexes
+
+# Mensagem personalizada para acesso negado
+ErrorDocument 403 "Acesso negado. Use o sistema administrativo para visualizar arquivos."
