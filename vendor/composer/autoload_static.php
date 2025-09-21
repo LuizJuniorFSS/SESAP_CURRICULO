@@ -27,8 +27,11 @@ class ComposerStaticInitcb5da62d73716ac8a1776f19367bc28f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            /** @phpstan-ignore-next-line */
             $loader->prefixLengthsPsr4 = ComposerStaticInitcb5da62d73716ac8a1776f19367bc28f::$prefixLengthsPsr4;
+            /** @phpstan-ignore-next-line */
             $loader->prefixDirsPsr4 = ComposerStaticInitcb5da62d73716ac8a1776f19367bc28f::$prefixDirsPsr4;
+            /** @phpstan-ignore-next-line */
             $loader->classMap = ComposerStaticInitcb5da62d73716ac8a1776f19367bc28f::$classMap;
 
         }, null, ClassLoader::class);
