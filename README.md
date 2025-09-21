@@ -4,6 +4,10 @@ http://localhost/sesap_curriculo/pages/user/user_login.php
 
 http://localhost/sesap_curriculo/pages/admin/login.php
 
+Administrador:
+   Usuário: SESAP
+   Senha: admin123
+
 # Sistema de Cadastro de Currículos - SESAP
 
 Sistema web moderno para cadastro e gerenciamento de currículos da Secretaria de Estado da Saúde Pública do Rio Grande do Norte (SESAP-RN).
@@ -215,7 +219,7 @@ sesap_curriculo/
 ## 🎯 Como Usar
 
 ### Para Candidatos
-1. **Acesse:** `http://localhost:8000`
+1. **Acesse:** `http://localhost/sesap_curriculo/pages/user/user_login.php`
 2. **Cadastre-se:** Preencha o formulário completo
 3. **Anexe:** Seu currículo (PDF, DOC, DOCX)
 4. **Envie:** Clique em "Enviar Currículo"
@@ -223,7 +227,7 @@ sesap_curriculo/
 6. **Acompanhe:** Use o dashboard pessoal
 
 ### Para Administradores
-1. **Acesse:** `http://localhost:8000/pages/admin/login.php`
+1. **Acesse:** `http://localhost/sesap_curriculo/pages/admin/login.php`
 2. **Login:** Use as credenciais administrativas
 3. **Gerencie:** Visualize todos os currículos
 4. **Filtre:** Use busca avançada por critérios
