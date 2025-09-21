@@ -5,6 +5,8 @@ config.php
 # Pasta de uploads (arquivos dos usuários)
 uploads/*
 !uploads/.htaccess
+pages/uploads/*
+!pages/uploads/.htaccess
 
 # Dependências do Composer
 vendor/
