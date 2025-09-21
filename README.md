@@ -5,9 +5,9 @@
 [![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
 [![Apache](https://img.shields.io/badge/Apache-2.4+-D22128?style=for-the-badge&logo=apache&logoColor=white)](https://httpd.apache.org)
-[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
-**Sistema web moderno para cadastro e gerenciamento de currículos da Secretaria de Estado da Saúde Pública do Rio Grande do Norte (SESAP-RN)**
+
+**Sistema web moderno para cadastro e gerenciamento de currículos**
 
 [🚀 Instalação](#-instalação) • [📖 Como Usar](#-como-usar) • [🔧 Configuração](#-configuração) • [🐛 Suporte](#-suporte)
 
