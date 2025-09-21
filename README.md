@@ -117,7 +117,8 @@ Antes de começar, certifique-se de ter instalado:
 ```powershell
 # Navegue até a pasta htdocs do XAMPP
 cd C:\xampp\htdocs
-# Os arquivos do projeto deve está no caminho cd C:\xampp\htdocs
+# Os arquivos do projeto deve está no caminho 
+cd C:\xampp\htdocs
 
 # Clone o repositório
 git clone [url-do-repositorio] sesap_curriculo
