@@ -117,6 +117,7 @@ Antes de começar, certifique-se de ter instalado:
 ```powershell
 # Navegue até a pasta htdocs do XAMPP
 cd C:\xampp\htdocs
+# Os arquivos do projeto deve está no caminho **C:\xampp\htdocs**
 
 # Clone o repositório
 git clone [url-do-repositorio] sesap_curriculo
@@ -354,14 +355,6 @@ sesap_curriculo/
 - ✅ **Proteção de Diretórios**: .htaccess configurado
 - ✅ **Headers de Segurança**: Configurações HTTP adequadas
 - ✅ **Logs de Auditoria**: Registro de ações importantes
-
-### 🔑 Credenciais Padrão
-
-```
-👤 Administrador Padrão:
-   Usuário: SESAP
-   Senha: admin123
-```
 
 > ⚠️ **CRÍTICO**: Altere essas credenciais imediatamente em produção!
 
