@@ -112,7 +112,7 @@ if (!empty($errors)) {
     exit;
 }
 
-// Processar upload do arquivo
+// Processar upload do arquivo - Armazenar no banco como BLOB
 $uploadDir = UPLOAD_DIR;
 if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0755, true);
@@ -137,28 +137,39 @@ function limparNomeArquivo($nome) {
 $nomeCompleto = limparNomeArquivo($data['nome']);
 $nomeArquivo = 'Curriculo_' . $nomeCompleto . '.' . $extensao;
 
-// Verificar se já existe um arquivo com esse nome e adicionar número se necessário
-$contador = 1;
-$nomeArquivoOriginal = $nomeArquivo;
-while (file_exists($uploadDir . $nomeArquivo)) {
-    $nomeArquivo = 'Curriculo_' . $nomeCompleto . '_' . $contador . '.' . $extensao;
-    $contador++;
-}
-
-$caminhoArquivo = $uploadDir . $nomeArquivo;
-
-if (!move_uploaded_file($arquivo['tmp_name'], $caminhoArquivo)) {
-    $_SESSION['errors'] = ['Erro ao salvar o arquivo.'];
+// Ler o conteúdo do arquivo para armazenar como BLOB
+$arquivoConteudo = file_get_contents($arquivo['tmp_name']);
+if ($arquivoConteudo === false) {
+    $_SESSION['errors'] = ['Erro ao ler o arquivo.'];
     header('Location: ../public/index.html?error=1');
     exit;
 }
 
-// Salvar no banco de dados
+// Obter informações do arquivo
+$arquivoTamanho = $arquivo['size'];
+$arquivoMimeType = $mimeType;
+
+// Criar backup físico opcional (para compatibilidade)
+$caminhoArquivo = $uploadDir . $nomeArquivo;
+$contador = 1;
+while (file_exists($caminhoArquivo)) {
+    $nomeArquivo = 'Curriculo_' . $nomeCompleto . '_' . $contador . '.' . $extensao;
+    $caminhoArquivo = $uploadDir . $nomeArquivo;
+    $contador++;
+}
+
+// Salvar cópia física (opcional - pode ser removido se quiser apenas BLOB)
+if (!move_uploaded_file($arquivo['tmp_name'], $caminhoArquivo)) {
+    // Não é erro crítico, pois o arquivo será salvo no banco
+    $caminhoArquivo = 'BLOB_STORAGE'; // Indicador de que está no banco
+}
+
+// Salvar no banco de dados com BLOB
 try {
     $pdo = getConnection();
     
-    $sql = "INSERT INTO curriculos (nome, email, telefone, cargo_desejado, escolaridade, observacoes, arquivo_nome, arquivo_caminho, ip_envio) 
-            VALUES (:nome, :email, :telefone, :cargo_desejado, :escolaridade, :observacoes, :arquivo_nome, :arquivo_caminho, :ip_envio)";
+    $sql = "INSERT INTO curriculos (nome, email, telefone, cargo_desejado, escolaridade, observacoes, arquivo_nome, arquivo_caminho, arquivo_conteudo, arquivo_tamanho, arquivo_mime_type, ip_envio) 
+            VALUES (:nome, :email, :telefone, :cargo_desejado, :escolaridade, :observacoes, :arquivo_nome, :arquivo_caminho, :arquivo_conteudo, :arquivo_tamanho, :arquivo_mime_type, :ip_envio)";
     
     $stmt = $pdo->prepare($sql);
     
@@ -171,14 +182,31 @@ try {
         ':observacoes' => $data['observacoes'],
         ':arquivo_nome' => $arquivo['name'],
         ':arquivo_caminho' => $caminhoArquivo,
+        ':arquivo_conteudo' => $arquivoConteudo,
+        ':arquivo_tamanho' => $arquivoTamanho,
+        ':arquivo_mime_type' => $arquivoMimeType,
         ':ip_envio' => getUserIP()
     ];
     
     $stmt->execute($params);
     $curriculoId = $pdo->lastInsertId();
     
+    // Para envio de email, usar arquivo temporário se necessário
+    $arquivoParaEmail = $caminhoArquivo;
+    if ($caminhoArquivo === 'BLOB_STORAGE') {
+        // Criar arquivo temporário para envio de email
+        $tempFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'temp_' . $nomeArquivo;
+        file_put_contents($tempFile, $arquivoConteudo);
+        $arquivoParaEmail = $tempFile;
+    }
+    
     // Enviar email para a empresa
-    $emailEnviado = enviarEmail($data, $caminhoArquivo, $arquivo['name']);
+    $emailEnviado = enviarEmail($data, $arquivoParaEmail, $arquivo['name']);
+    
+    // Limpar arquivo temporário se foi criado
+    if ($caminhoArquivo === 'BLOB_STORAGE' && file_exists($tempFile)) {
+        unlink($tempFile);
+    }
     
     // Preparar dados para a página de sucesso
     $_SESSION['curriculo_id'] = $curriculoId;
