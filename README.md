@@ -306,14 +306,6 @@ SHOW INDEX FROM curriculos;
 OPTIMIZE TABLE curriculos;
 ```
 
-## 📈 Atualizações e Melhorias
-
-### Versão Atual: 2.0
-- ✅ Arquitetura reorganizada
-- ✅ Segurança aprimorada
-- ✅ Interface modernizada
-- ✅ Performance otimizada
-
 ### Próximas Funcionalidades
 - 🔄 API REST para integrações
 - 🔄 Sistema de notificações push
