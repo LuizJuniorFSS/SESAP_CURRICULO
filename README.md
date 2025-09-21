@@ -1,3 +1,9 @@
+http://localhost/sesap_curriculo/public/index.html
+
+http://localhost/sesap_curriculo/pages/user/user_login.php
+
+http://localhost/sesap_curriculo/pages/admin/login.php
+
 # Sistema de Cadastro de Currículos - SESAP
 
 Sistema web moderno para cadastro e gerenciamento de currículos da Secretaria de Estado da Saúde Pública do Rio Grande do Norte (SESAP-RN).
