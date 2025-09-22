@@ -35,6 +35,8 @@
 
 O **Sistema de Cadastro de Currículos SESAP** é uma aplicação web desenvolvida especificamente para facilitar o processo de recrutamento e seleção da Secretaria de Estado da Saúde Pública do Rio Grande do Norte. 
 
+# 🖥️ localhost
+
 ### 🌟 Principais Características
 
 - 🎨 **Interface Moderna**: Design responsivo e intuitivo
