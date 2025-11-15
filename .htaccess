@@ -1,0 +1,9 @@
+RewriteEngine On
+RewriteBase /
+
+# Suportar URLs antigas com prefixo XAMPP
+RewriteCond %{REQUEST_URI} ^/sesap_curriculo/
+RewriteRule ^sesap_curriculo/(.*)$ /$1 [L]
+
+# Atalho para homepage antiga
+RewriteRule ^sesap_curriculo$ /public/index.html [L]

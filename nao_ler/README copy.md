@@ -731,6 +731,52 @@ php -l includes\config.php
   - Registro aparece no banco (`curriculos`).
   - E-mail chega ao destinatário definido em `EMAIL_TO` com o arquivo anexado.
 
+## 📞 Suporte
+
+### 🆘 Precisa de Ajuda?
+
+- 📧 **Email**: juniorrsilva50@gmail.com
+- 📱 **Telefone**: (84) 99420-xxxx
+- 🐛 **Issues**: [Reportar Bug](https://github.com/seu-usuario/sesap-curriculo/issues)
+
+### 🤝 Contribuindo
+
+1. **Fork** o projeto
+2. **Crie** uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. **Commit** suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. **Push** para a branch (`git push origin feature/AmazingFeature`)
+5. **Abra** um Pull Request
+
+### 📋 Reportando Bugs
+
+Ao reportar um bug, inclua:
+
+- ✅ **Descrição detalhada** do problema
+- ✅ **Passos para reproduzir** o erro
+- ✅ **Ambiente** (OS, PHP, MySQL, navegador)
+- ✅ **Screenshots** se aplicável
+- ✅ **Logs de erro** relevantes
+
+---
+
+## 🚀 Próximas Funcionalidades
+
+- 🔄 **API REST** para integrações externas
+- 🔄 **Dashboard com gráficos** e estatísticas
+- 🔄 **Sistema de notificações** push
+- 🔄 **Exportação** em múltiplos formatos
+- 🔄 **Templates de email** personalizáveis
+- 🔄 **Autenticação** via OAuth (Google/Microsoft)
+
+---
+
+<div align="center">
+
+## 🏥 Desenvolvido para SESAP-RN
+
+**Sistema de Gestão de Currículos v1.0**
+
+*Facilitando o processo de recrutamento e seleção da Secretaria de Estado da Saúde Pública do Rio Grande do Norte*
 
 ---
 
@@ -739,11 +785,5 @@ php -l includes\config.php
 [![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
 
 **© 2024 - Todos os direitos reservados.**
-
-- Acesse http://localhost:8081/ para visualizar e gerenciar o MySQL via phpMyAdmin.
-- Servidor: db
-- Usuário: sesap
-- Senha: sesap123
-- Banco: sesap_curriculo
 
 </div>

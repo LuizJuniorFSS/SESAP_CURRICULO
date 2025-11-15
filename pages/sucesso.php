@@ -261,7 +261,7 @@ $ip = isset($_SESSION['ip_envio']) ? $_SESSION['ip_envio'] : 'Não disponível';
             <a href="user/user_logout.php" class="btn btn-secondary">
                 🚪 Sair
             </a>
-            <a href="/sesap_curriculo/public/index.html" class="btn btn-secondary">
+            <a href="/public/index.html" class="btn btn-secondary">
                 🏠 Voltar ao Início
             </a>
         </div>

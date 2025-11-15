@@ -1,62 +1,10 @@
-# Arquivos de configuração sensíveis
-includes/config.php
-config.php
-
-# Pasta de uploads (arquivos dos usuários)
-uploads/*
-!uploads/.htaccess
-pages/uploads/*
-!pages/uploads/.htaccess
-
-# Dependências do Composer
-vendor/
-
-# Logs
-*.log
-error.log
-access.log
-
-# Arquivos temporários
-*.tmp
-*.temp
-
-# Arquivos do sistema operacional
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Arquivos de backup
-*.bak
-*.backup
-*.old
-
-# Cache
-cache/
-*.cache
-
-# Arquivos de sessão PHP
-sess_*
-
-# Arquivos de configuração local
-config_local.php
 .env
-.env.local
-
-# Arquivos grandes (instaladores)
-INSTALADORES/XAMPP.exe
-*.exe
-
-# Arquivos de banco de dados locais
-*.sqlite
-*.db
-
-# Arquivos de teste
-test_*
-debug_*
+uploads/
+vendor/
+*.log
+*.tmp
+.DS_Store
+.idea/
+.vscode/
+.trae/
+node_modules/
